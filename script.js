@@ -1,121 +1,62 @@
+/* =========================================
+   BIBLIOTECA ESCOLAR
+   Sistema de gerenciamento
+========================================= */
 
 
-// =====================================================
-// BANCO DE DADOS LOCAL
-// =====================================================
+/* =========================================
+   DADOS
+========================================= */
 
-let livros = JSON.parse(localStorage.getItem("livros")) || [];
-
-let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+let livros =
+    JSON.parse(localStorage.getItem("livros")) || [];
 
 let emprestimos =
     JSON.parse(localStorage.getItem("emprestimos")) || [];
 
 
-// =====================================================
-// NAVEGAÇÃO
-// =====================================================
+/* =========================================
+   ELEMENTOS DO HTML
+========================================= */
 
-function mostrarPagina(pagina) {
+const formLivro =
+    document.getElementById("formLivro");
 
-    document.querySelectorAll(".pagina").forEach(secao => {
-        secao.classList.remove("ativa");
-    });
+const formEmprestimo =
+    document.getElementById("formEmprestimo");
 
-    document.getElementById(pagina).classList.add("ativa");
+const listaLivros =
+    document.getElementById("listaLivros");
 
+const listaEmprestimos =
+    document.getElementById("listaEmprestimos");
 
-    document.querySelectorAll(".menu-btn").forEach(btn => {
-        btn.classList.remove("active");
-    });
-
-
-    const botoes = document.querySelectorAll(".menu-btn");
-
-    if (pagina === "inicio") {
-        botoes[0].classList.add("active");
-        document.getElementById("tituloPagina").textContent = "Início";
-    }
-
-    if (pagina === "livros") {
-        botoes[1].classList.add("active");
-        document.getElementById("tituloPagina").textContent = "Livros";
-    }
-
-    if (pagina === "alunos") {
-        botoes[2].classList.add("active");
-        document.getElementById("tituloPagina").textContent = "Alunos";
-    }
-
-    if (pagina === "emprestimos") {
-        botoes[3].classList.add("active");
-        document.getElementById("tituloPagina").textContent = "Empréstimos";
-    }
+const livroEmprestimo =
+    document.getElementById("livroEmprestimo");
 
 
-    atualizarSistema();
-}
+/* =========================================
+   CADASTRAR LIVRO
+========================================= */
 
-
-
-// =====================================================
-// MODAIS
-// =====================================================
-
-function abrirModalLivro() {
-    document.getElementById("modalLivro")
-        .classList.add("ativo");
-}
-
-
-function abrirModalAluno() {
-    document.getElementById("modalAluno")
-        .classList.add("ativo");
-}
-
-
-function abrirModalEmprestimo() {
-
-    atualizarSelects();
-
-    document.getElementById("modalEmprestimo")
-        .classList.add("ativo");
-}
-
-
-function fecharModais() {
-
-    document.querySelectorAll(".modal").forEach(modal => {
-        modal.classList.remove("ativo");
-    });
-
-}
-
-
-
-// =====================================================
-// LIVROS
-// =====================================================
-
-function adicionarLivro(event) {
+formLivro.addEventListener("submit", function (event) {
 
     event.preventDefault();
+
+    const nome =
+        document.getElementById("nomeLivro").value.trim();
+
+    const autor =
+        document.getElementById("autorLivro").value.trim();
 
 
     const livro = {
 
         id: Date.now(),
 
-        titulo:
-            document.getElementById("tituloLivro").value,
+        nome: nome,
 
-        autor:
-            document.getElementById("autorLivro").value,
-
-        categoria:
-            document.getElementById("categoriaLivro").value,
-
-        disponivel: true
+        autor: autor
 
     };
 
@@ -126,171 +67,96 @@ function adicionarLivro(event) {
     salvarDados();
 
 
-    event.target.reset();
-
-    fecharModais();
-
-    atualizarSistema();
-}
+    formLivro.reset();
 
 
-function excluirLivro(id) {
+    atualizarTela();
 
-    const livroEmprestado =
-        emprestimos.some(
-            emprestimo =>
-                emprestimo.livroId === id &&
-                emprestimo.status === "Emprestado"
-        );
+});
 
 
-    if (livroEmprestado) {
+/* =========================================
+   CADASTRAR EMPRÉSTIMO
+========================================= */
 
-        alert(
-            "Este livro está emprestado e não pode ser excluído."
-        );
-
-        return;
-    }
-
-
-    if (confirm("Deseja excluir este livro?")) {
-
-        livros =
-            livros.filter(livro => livro.id !== id);
-
-        salvarDados();
-
-        atualizarSistema();
-    }
-}
-
-
-
-// =====================================================
-// ALUNOS
-// =====================================================
-
-function adicionarAluno(event) {
+formEmprestimo.addEventListener("submit", function (event) {
 
     event.preventDefault();
-
-
-    const aluno = {
-
-        id: Date.now(),
-
-        nome:
-            document.getElementById("nomeAluno").value,
-
-        matricula:
-            document.getElementById("matriculaAluno").value,
-
-        turma:
-            document.getElementById("turmaAluno").value
-
-    };
-
-
-    alunos.push(aluno);
-
-
-    salvarDados();
-
-
-    event.target.reset();
-
-    fecharModais();
-
-    atualizarSistema();
-}
-
-
-function excluirAluno(id) {
-
-    const possuiEmprestimo =
-        emprestimos.some(
-            emprestimo =>
-                emprestimo.alunoId === id &&
-                emprestimo.status === "Emprestado"
-        );
-
-
-    if (possuiEmprestimo) {
-
-        alert(
-            "Este aluno possui um livro emprestado."
-        );
-
-        return;
-    }
-
-
-    if (confirm("Deseja excluir este aluno?")) {
-
-        alunos =
-            alunos.filter(aluno => aluno.id !== id);
-
-        salvarDados();
-
-        atualizarSistema();
-    }
-}
-
-
-
-// =====================================================
-// EMPRÉSTIMOS
-// =====================================================
-
-function adicionarEmprestimo(event) {
-
-    event.preventDefault();
-
-
-    const alunoId =
-        Number(
-            document.getElementById("alunoEmprestimo").value
-        );
 
 
     const livroId =
         Number(
-            document.getElementById("livroEmprestimo").value
+            document.getElementById(
+                "livroEmprestimo"
+            ).value
         );
 
 
+    const aluno =
+        document.getElementById(
+            "nomeAluno"
+        ).value.trim();
+
+
+    const turma =
+        document.getElementById(
+            "turma"
+        ).value.trim();
+
+
+    const email =
+        document.getElementById(
+            "email"
+        ).value.trim();
+
+
+    const dias =
+        Number(
+            document.getElementById(
+                "tempoEmprestimo"
+            ).value
+        );
+
+
+    /* -------------------------
+       DATAS
+    ------------------------- */
+
+    const dataEmprestimo = new Date();
+
+
     const dataDevolucao =
-        document.getElementById("dataDevolucao").value;
+        new Date(dataEmprestimo);
 
 
-    const livro =
-        livros.find(livro => livro.id === livroId);
+    dataDevolucao.setDate(
+        dataDevolucao.getDate() + dias
+    );
 
 
-    if (!livro || !livro.disponivel) {
-
-        alert("Este livro não está disponível.");
-
-        return;
-    }
-
+    /* -------------------------
+       NOVO EMPRÉSTIMO
+    ------------------------- */
 
     const emprestimo = {
 
         id: Date.now(),
 
-        alunoId: alunoId,
-
         livroId: livroId,
 
-        data:
-            new Date().toLocaleDateString("pt-BR"),
+        aluno: aluno,
+
+        turma: turma,
+
+        email: email,
+
+        dataEmprestimo:
+            dataEmprestimo.toISOString(),
 
         dataDevolucao:
-            dataDevolucao,
+            dataDevolucao.toISOString(),
 
-        status: "Emprestado"
+        ativo: true
 
     };
 
@@ -298,535 +164,26 @@ function adicionarEmprestimo(event) {
     emprestimos.push(emprestimo);
 
 
-    livro.disponivel = false;
-
-
     salvarDados();
 
 
-    event.target.reset();
+    formEmprestimo.reset();
 
-    fecharModais();
 
-    atualizarSistema();
-}
+    atualizarTela();
 
+});
 
 
-// =====================================================
-// DEVOLVER LIVRO
-// =====================================================
-
-function devolverLivro(id) {
-
-    const emprestimo =
-        emprestimos.find(
-            item => item.id === id
-        );
-
-
-    if (!emprestimo) return;
-
-
-    emprestimo.status = "Devolvido";
-
-
-    const livro =
-        livros.find(
-            livro =>
-                livro.id === emprestimo.livroId
-        );
-
-
-    if (livro) {
-        livro.disponivel = true;
-    }
-
-
-    salvarDados();
-
-
-    atualizarSistema();
-}
-
-
-
-// =====================================================
-// ATUALIZAR TABELA DE LIVROS
-// =====================================================
-
-function atualizarLivros() {
-
-    const tabela =
-        document.getElementById("tabelaLivros");
-
-
-    tabela.innerHTML = "";
-
-
-    livros.forEach(livro => {
-
-        const linha =
-            document.createElement("tr");
-
-
-        linha.innerHTML = `
-
-            <td>${livro.id}</td>
-
-            <td>
-                <strong>${livro.titulo}</strong>
-            </td>
-
-            <td>${livro.autor}</td>
-
-            <td>${livro.categoria}</td>
-
-            <td>
-
-                ${
-                    livro.disponivel
-
-                    ? `<span class="status disponivel">
-                        Disponível
-                       </span>`
-
-                    : `<span class="status emprestado">
-                        Emprestado
-                       </span>`
-                }
-
-            </td>
-
-            <td>
-
-                <button
-                    class="btn-excluir"
-                    onclick="excluirLivro(${livro.id})"
-                >
-                    Excluir
-                </button>
-
-            </td>
-        `;
-
-
-        tabela.appendChild(linha);
-
-    });
-
-}
-
-
-
-// =====================================================
-// ATUALIZAR TABELA DE ALUNOS
-// =====================================================
-
-function atualizarAlunos() {
-
-    const tabela =
-        document.getElementById("tabelaAlunos");
-
-
-    tabela.innerHTML = "";
-
-
-    alunos.forEach(aluno => {
-
-        const linha =
-            document.createElement("tr");
-
-
-        linha.innerHTML = `
-
-            <td>${aluno.id}</td>
-
-            <td>
-                <strong>${aluno.nome}</strong>
-            </td>
-
-            <td>${aluno.matricula}</td>
-
-            <td>${aluno.turma}</td>
-
-            <td>
-
-                <button
-                    class="btn-excluir"
-                    onclick="excluirAluno(${aluno.id})"
-                >
-                    Excluir
-                </button>
-
-            </td>
-
-        `;
-
-
-        tabela.appendChild(linha);
-
-    });
-
-}
-
-
-
-// =====================================================
-// ATUALIZAR TABELA DE EMPRÉSTIMOS
-// =====================================================
-
-function atualizarEmprestimos() {
-
-    const tabela =
-        document.getElementById(
-            "tabelaEmprestimos"
-        );
-
-
-    tabela.innerHTML = "";
-
-
-    emprestimos.forEach(emprestimo => {
-
-        const aluno =
-            alunos.find(
-                aluno =>
-                    aluno.id === emprestimo.alunoId
-            );
-
-
-        const livro =
-            livros.find(
-                livro =>
-                    livro.id === emprestimo.livroId
-            );
-
-
-        const linha =
-            document.createElement("tr");
-
-
-        linha.innerHTML = `
-
-            <td>
-                ${aluno ? aluno.nome : "Aluno removido"}
-            </td>
-
-            <td>
-                ${livro ? livro.titulo : "Livro removido"}
-            </td>
-
-            <td>
-                ${emprestimo.data}
-            </td>
-
-            <td>
-                ${formatarData(emprestimo.dataDevolucao)}
-            </td>
-
-            <td>
-
-                ${
-                    emprestimo.status === "Emprestado"
-
-                    ? `<span class="status emprestado">
-                        Emprestado
-                       </span>`
-
-                    : `<span class="status disponivel">
-                        Devolvido
-                       </span>`
-                }
-
-            </td>
-
-            <td>
-
-                ${
-                    emprestimo.status === "Emprestado"
-
-                    ? `
-                        <button
-                            class="btn-devolver"
-                            onclick="devolverLivro(${emprestimo.id})"
-                        >
-                            Devolver
-                        </button>
-                      `
-
-                    : "-"
-                }
-
-            </td>
-
-        `;
-
-
-        tabela.appendChild(linha);
-
-    });
-
-}
-
-
-
-// =====================================================
-// SELECTS DO EMPRÉSTIMO
-// =====================================================
-
-function atualizarSelects() {
-
-    const selectAluno =
-        document.getElementById(
-            "alunoEmprestimo"
-        );
-
-
-    const selectLivro =
-        document.getElementById(
-            "livroEmprestimo"
-        );
-
-
-    selectAluno.innerHTML =
-        `<option value="">
-            Selecione um aluno
-        </option>`;
-
-
-    selectLivro.innerHTML =
-        `<option value="">
-            Selecione um livro
-        </option>`;
-
-
-    alunos.forEach(aluno => {
-
-        selectAluno.innerHTML += `
-
-            <option value="${aluno.id}">
-                ${aluno.nome} - ${aluno.matricula}
-            </option>
-
-        `;
-
-    });
-
-
-    livros
-        .filter(livro => livro.disponivel)
-        .forEach(livro => {
-
-            selectLivro.innerHTML += `
-
-                <option value="${livro.id}">
-                    ${livro.titulo}
-                </option>
-
-            `;
-
-        });
-
-}
-
-
-
-// =====================================================
-// PESQUISA
-// =====================================================
-
-function pesquisarLivro() {
-
-    const pesquisa =
-        document
-            .getElementById("pesquisaLivro")
-            .value
-            .toLowerCase();
-
-
-    const linhas =
-        document.querySelectorAll(
-            "#tabelaLivros tr"
-        );
-
-
-    linhas.forEach(linha => {
-
-        const texto =
-            linha.textContent.toLowerCase();
-
-
-        linha.style.display =
-            texto.includes(pesquisa)
-                ? ""
-                : "none";
-
-    });
-
-}
-
-
-
-// =====================================================
-// DASHBOARD
-// =====================================================
-
-function atualizarDashboard() {
-
-    const total =
-        livros.length;
-
-
-    const emprestados =
-        livros.filter(
-            livro => !livro.disponivel
-        ).length;
-
-
-    const disponiveis =
-        livros.filter(
-            livro => livro.disponivel
-        ).length;
-
-
-    document.getElementById(
-        "totalLivros"
-    ).textContent = total;
-
-
-    document.getElementById(
-        "totalAlunos"
-    ).textContent = alunos.length;
-
-
-    document.getElementById(
-        "totalEmprestados"
-    ).textContent = emprestados;
-
-
-    document.getElementById(
-        "totalDisponiveis"
-    ).textContent = disponiveis;
-
-
-    atualizarRecentes();
-}
-
-
-
-// =====================================================
-// EMPRÉSTIMOS RECENTES
-// =====================================================
-
-function atualizarRecentes() {
-
-    const tabela =
-        document.getElementById(
-            "tabelaRecentes"
-        );
-
-
-    tabela.innerHTML = "";
-
-
-    emprestimos
-        .slice(-5)
-        .reverse()
-        .forEach(emprestimo => {
-
-            const aluno =
-                alunos.find(
-                    aluno =>
-                        aluno.id === emprestimo.alunoId
-                );
-
-
-            const livro =
-                livros.find(
-                    livro =>
-                        livro.id === emprestimo.livroId
-                );
-
-
-            const linha =
-                document.createElement("tr");
-
-
-            linha.innerHTML = `
-
-                <td>
-                    ${aluno ? aluno.nome : "-"}
-                </td>
-
-                <td>
-                    ${livro ? livro.titulo : "-"}
-                </td>
-
-                <td>
-                    ${emprestimo.data}
-                </td>
-
-                <td>
-
-                    ${
-                        emprestimo.status === "Emprestado"
-
-                        ? `<span class="status emprestado">
-                            Emprestado
-                           </span>`
-
-                        : `<span class="status disponivel">
-                            Devolvido
-                           </span>`
-                    }
-
-                </td>
-
-            `;
-
-
-            tabela.appendChild(linha);
-
-        });
-
-}
-
-
-
-// =====================================================
-// FORMATAÇÃO DE DATA
-// =====================================================
-
-function formatarData(data) {
-
-    if (!data) return "-";
-
-
-    const partes =
-        data.split("-");
-
-
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
-}
-
-
-
-// =====================================================
-// SALVAR DADOS
-// =====================================================
+/* =========================================
+   SALVAR DADOS
+========================================= */
 
 function salvarDados() {
 
     localStorage.setItem(
         "livros",
         JSON.stringify(livros)
-    );
-
-
-    localStorage.setItem(
-        "alunos",
-        JSON.stringify(alunos)
     );
 
 
@@ -838,16 +195,15 @@ function salvarDados() {
 }
 
 
+/* =========================================
+   ATUALIZAR TODA A INTERFACE
+========================================= */
 
-// =====================================================
-// ATUALIZA TODO O SISTEMA
-// =====================================================
-
-function atualizarSistema() {
+function atualizarTela() {
 
     atualizarLivros();
 
-    atualizarAlunos();
+    atualizarSelectLivros();
 
     atualizarEmprestimos();
 
@@ -856,9 +212,457 @@ function atualizarSistema() {
 }
 
 
+/* =========================================
+   MOSTRAR LIVROS
+========================================= */
 
-// =====================================================
-// INICIALIZAÇÃO
-// =====================================================
+function atualizarLivros() {
 
-atualizarSistema();
+    listaLivros.innerHTML = "";
+
+
+    if (livros.length === 0) {
+
+        listaLivros.innerHTML =
+            `<div class="vazio">
+                Nenhum livro cadastrado.
+            </div>`;
+
+        return;
+    }
+
+
+    livros.forEach(function (livro) {
+
+        const item =
+            document.createElement("div");
+
+
+        item.className = "item";
+
+
+        item.innerHTML = `
+
+            <strong>
+                ${escaparHTML(livro.nome)}
+            </strong>
+
+            <p>
+                Autor:
+                ${escaparHTML(livro.autor)}
+            </p>
+
+            <div class="acoes">
+
+                <button
+                    class="btn-excluir"
+                    onclick="excluirLivro(${livro.id})"
+                >
+                    Excluir
+                </button>
+
+            </div>
+
+        `;
+
+
+        listaLivros.appendChild(item);
+
+    });
+
+}
+
+
+/* =========================================
+   ATUALIZAR SELECT DOS LIVROS
+========================================= */
+
+function atualizarSelectLivros() {
+
+    livroEmprestimo.innerHTML = `
+
+        <option value="">
+            Selecione um livro
+        </option>
+
+    `;
+
+
+    livros.forEach(function (livro) {
+
+        const option =
+            document.createElement("option");
+
+
+        option.value = livro.id;
+
+
+        option.textContent =
+            `${livro.nome} - ${livro.autor}`;
+
+
+        livroEmprestimo.appendChild(option);
+
+    });
+
+}
+
+
+/* =========================================
+   MOSTRAR EMPRÉSTIMOS
+========================================= */
+
+function atualizarEmprestimos() {
+
+    listaEmprestimos.innerHTML = "";
+
+
+    if (emprestimos.length === 0) {
+
+        listaEmprestimos.innerHTML =
+            `<div class="vazio">
+                Nenhum empréstimo registrado.
+            </div>`;
+
+        return;
+    }
+
+
+    emprestimos.forEach(function (emprestimo) {
+
+        const livro =
+            livros.find(
+                livro =>
+                    livro.id === emprestimo.livroId
+            );
+
+
+        const diasRestantes =
+            calcularDiasRestantes(
+                emprestimo.dataDevolucao
+            );
+
+
+        let classePrazo = "prazo";
+
+        let mensagem = "";
+
+
+        /* -------------------------
+           SITUAÇÃO DO EMPRÉSTIMO
+        ------------------------- */
+
+        if (diasRestantes < 0) {
+
+            classePrazo =
+                "prazo vencido";
+
+
+            mensagem =
+                `⚠️ Empréstimo vencido há
+                ${Math.abs(diasRestantes)}
+                dia(s).`;
+
+        }
+
+
+        else if (diasRestantes === 0) {
+
+            classePrazo =
+                "prazo vencido";
+
+
+            mensagem =
+                "⚠️ O empréstimo vence hoje!";
+
+        }
+
+
+        else if (diasRestantes === 1) {
+
+            classePrazo =
+                "prazo ultimo-dia";
+
+
+            mensagem =
+                "⚠️ Falta apenas 1 dia para a devolução.";
+
+        }
+
+
+        else {
+
+            mensagem =
+                `⏳ Faltam
+                ${diasRestantes}
+                dias para a devolução.`;
+
+        }
+
+
+        /* -------------------------
+           CRIAR ITEM
+        ------------------------- */
+
+        const item =
+            document.createElement("div");
+
+
+        item.className = "item";
+
+
+        item.innerHTML = `
+
+            <strong>
+                ${livro
+                    ? escaparHTML(livro.nome)
+                    : "Livro removido"
+                }
+            </strong>
+
+            <p>
+                👨‍🎓 Aluno:
+                ${escaparHTML(emprestimo.aluno)}
+            </p>
+
+            <p>
+                🏫 Turma:
+                ${escaparHTML(emprestimo.turma)}
+            </p>
+
+            <p>
+                ✉️ E-mail:
+                ${escaparHTML(emprestimo.email)}
+            </p>
+
+            <p>
+                📅 Data do empréstimo:
+                ${formatarData(
+                    emprestimo.dataEmprestimo
+                )}
+            </p>
+
+            <p>
+                📅 Data de devolução:
+                ${formatarData(
+                    emprestimo.dataDevolucao
+                )}
+            </p>
+
+            <div class="${classePrazo}">
+                ${mensagem}
+            </div>
+
+            <div class="acoes">
+
+                <button
+                    class="btn-excluir"
+                    onclick="excluirEmprestimo(${emprestimo.id})"
+                >
+                    Excluir
+                </button>
+
+            </div>
+
+        `;
+
+
+        listaEmprestimos.appendChild(item);
+
+    });
+
+}
+
+
+/* =========================================
+   CALCULAR DIAS RESTANTES
+========================================= */
+
+function calcularDiasRestantes(data) {
+
+    const agora =
+        new Date();
+
+
+    const devolucao =
+        new Date(data);
+
+
+    const diferenca =
+        devolucao.getTime() -
+        agora.getTime();
+
+
+    const dias =
+        Math.ceil(
+            diferenca /
+            (1000 * 60 * 60 * 24)
+        );
+
+
+    return dias;
+
+}
+
+
+/* =========================================
+   FORMATAR DATA
+========================================= */
+
+function formatarData(data) {
+
+    return new Date(data)
+        .toLocaleDateString("pt-BR");
+
+}
+
+
+/* =========================================
+   EXCLUIR LIVRO
+========================================= */
+
+function excluirLivro(id) {
+
+    const possuiEmprestimo =
+        emprestimos.some(
+            emprestimo =>
+                emprestimo.livroId === id
+        );
+
+
+    if (possuiEmprestimo) {
+
+        alert(
+            "Este livro possui um empréstimo registrado e não pode ser excluído."
+        );
+
+        return;
+    }
+
+
+    const confirmar =
+        confirm(
+            "Deseja realmente excluir este livro?"
+        );
+
+
+    if (!confirmar) {
+        return;
+    }
+
+
+    livros =
+        livros.filter(
+            livro =>
+                livro.id !== id
+        );
+
+
+    salvarDados();
+
+
+    atualizarTela();
+
+}
+
+
+/* =========================================
+   EXCLUIR EMPRÉSTIMO
+========================================= */
+
+function excluirEmprestimo(id) {
+
+    const confirmar =
+        confirm(
+            "Deseja realmente excluir este empréstimo?"
+        );
+
+
+    if (!confirmar) {
+        return;
+    }
+
+
+    emprestimos =
+        emprestimos.filter(
+            emprestimo =>
+                emprestimo.id !== id
+        );
+
+
+    salvarDados();
+
+
+    atualizarTela();
+
+}
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+function atualizarDashboard() {
+
+    document.getElementById(
+        "totalLivros"
+    ).textContent = livros.length;
+
+
+    document.getElementById(
+        "totalEmprestimos"
+    ).textContent = emprestimos.length;
+
+
+    const ativos =
+        emprestimos.filter(
+            emprestimo =>
+                calcularDiasRestantes(
+                    emprestimo.dataDevolucao
+                ) >= 0
+        );
+
+
+    document.getElementById(
+        "emprestimosAtivos"
+    ).textContent = ativos.length;
+
+}
+
+
+/* =========================================
+   PROTEÇÃO CONTRA HTML
+========================================= */
+
+function escaparHTML(texto) {
+
+    const div =
+        document.createElement("div");
+
+
+    div.textContent = texto;
+
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================
+   ATUALIZAÇÃO DO CONTADOR
+========================================= */
+
+setInterval(function () {
+
+    atualizarEmprestimos();
+
+    atualizarDashboard();
+
+}, 60000);
+
+
+/* =========================================
+   INICIALIZAÇÃO
+========================================= */
+
+atualizarTela();
