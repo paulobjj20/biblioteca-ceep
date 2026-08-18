@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📚 Biblioteca Escolar - Disciplulos de Evandro</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===================== LOGIN ===================== -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <h2>🔐 Acesso</h2>
+            <p>Biblioteca Escolar - Disciplulos de Evandro</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUser">Usuário</label>
+                    <input type="text" id="loginUser" placeholder="" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="loginPass">Senha</label>
+                    <input type="password" id="loginPass" placeholder="" value="" />
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+                <div class="login-error" id="loginError">Usuário ou senha inválidos.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            📚 Biblioteca CEEP
+            <span>v2</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="active" data-page="dashboard"><span>📊</span> Painel</a>
+            <a href="#" data-page="livros"><span>📖</span> Livros</a>
+            <a href="#" data-page="emprestimos"><span>🔄</span> Empréstimos</a>
+            <a href="#" data-page="alunos"><span>👥</span> Alunos</a>
+            <a href="#" data-page="configuracoes"><span>⚙️</span> Configurações</a>
+        </nav>
+        <div class="sidebar-footer">
+            <p>© 2026 · Disciplulos de Evandro</p>
+            <p style="margin-top:4px; font-size:12px; color:#3a3a3a;">Sistema interno</p>
+        </div>
+    </aside>
+
+    <!-- ===================== MAIN ===================== -->
+    <main class="main-content">
+
+        <header class="header">
+            <h1 id="pageTitle">📊 Painel</h1>
+            <p id="pageSubtitle">Visão geral do sistema</p>
+        </header>
+
+        <!-- ==================== PÁGINA: DASHBOARD ==================== -->
+        <section id="page-dashboard" class="page active">
+            <section class="dashboard">
+                <div class="card">
+                    <span>Livros cadastrados</span>
+                    <strong id="totalLivros">0</strong>
+                </div>
+                <div class="card">
+                    <span>Empréstimos</span>
+                    <strong id="totalEmprestimos">0</strong>
+                </div>
+                <div class="card">
+                    <span>Empréstimos ativos</span>
+                    <strong id="emprestimosAtivos">0</strong>
+                </div>
+                <div class="card">
+                    <span>Alunos cadastrados</span>
+                    <strong id="totalAlunos">0</strong>
+                </div>
+            </section>
+        </section>
+
+        <!-- ==================== PÁGINA: LIVROS ==================== -->
+        <section id="page-livros" class="page">
+            <div class="section">
+                <div class="section-header">
+                    <h2>📖 Cadastrar livro</h2>
+                </div>
+                <form id="formLivro">
+                    <div class="form-group">
+                        <label for="tituloLivro">Título do livro</label>
+                        <input type="text" id="tituloLivro" placeholder="Digite o título" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="autorLivro">Autor</label>
+                        <input type="text" id="autorLivro" placeholder="Nome do autor" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="categoriaLivro">Categoria</label>
+                        <select id="categoriaLivro" required>
+                            <option value="">Selecione a categoria</option>
+                            <option value="Ficção">Ficção</option>
+                            <option value="Não-ficção">Não-ficção</option>
+                            <option value="Didático">Didático</option>
+                            <option value="Infantil">Infantil</option>
+                            <option value="Fantasia">Fantasia</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Terror">Terror</option>
+                            <option value="Biografia">Biografia</option>
+                            <option value="Ciência">Ciência</option>
+                            <option value="História">História</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Cadastrar livro</button>
+                </form>
+
+                <div class="lista-container">
+                    <h3>📚 Livros cadastrados</h3>
+                    <div id="listaLivros"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PÁGINA: EMPRÉSTIMOS ==================== -->
+        <section id="page-emprestimos" class="page">
+            <div class="section">
+                <div class="section-header">
+                    <h2>📚 Novo empréstimo</h2>
+                </div>
+                <form id="formEmprestimo">
+                    <div class="form-group">
+                        <label for="alunoEmprestimo">Aluno</label>
+                        <select id="alunoEmprestimo" required>
+                            <option value="">Selecione um aluno</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="livroEmprestimo">Livro</label>
+                        <select id="livroEmprestimo" required>
+                            <option value="">Selecione um livro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dataEmprestimo">Data do empréstimo</label>
+                        <input type="date" id="dataEmprestimo" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="dataPrevisao">Data prevista para devolução</label>
+                        <input type="date" id="dataPrevisao" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="observacao">Observação</label>
+                        <textarea id="observacao" rows="3" placeholder="Observações sobre o empréstimo" style="width:100%; padding:12px 14px; background:#0d0d0d; color:#f0f0f0; border:1px solid #333; border-radius:8px; outline:none; font-size:14px; resize:vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn">Registrar empréstimo</button>
+                </form>
+
+                <div class="lista-container">
+                    <h3>🔄 Empréstimos registrados</h3>
+                    <div id="listaEmprestimos"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PÁGINA: ALUNOS ==================== -->
+        <section id="page-alunos" class="page">
+            <div class="section">
+                <div class="section-header">
+                    <h2>👥 Cadastrar aluno</h2>
+                </div>
+                <form id="formAluno">
+                    <div class="form-group">
+                        <label for="nomeAlunoCadastro">Nome completo</label>
+                        <input type="text" id="nomeAlunoCadastro" placeholder="Digite o nome" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="turmaAluno">Turma</label>
+                        <input type="text" id="turmaAluno" placeholder="Ex: 8º A" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="telefoneAluno">Telefone</label>
+                        <input type="text" id="telefoneAluno" placeholder="(11) 99999-9999" />
+                    </div>
+                    <div class="form-group">
+                        <label for="emailAluno">E-mail</label>
+                        <input type="email" id="emailAluno" placeholder="aluno@email.com" required />
+                    </div>
+                    <button type="submit" class="btn">Cadastrar aluno</button>
+                </form>
+
+                <div class="lista-container">
+                    <h3>👥 Alunos cadastrados</h3>
+                    <div id="listaAlunos"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PÁGINA: CONFIGURAÇÕES ==================== -->
+        <section id="page-configuracoes" class="page">
+            <div class="section">
+                <div class="section-header">
+                    <h2>⚙️ Configurações do sistema</h2>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #bbb; margin-bottom: 15px; font-weight: 400;">Dados do sistema</h3>
+                    <div style="background: #0d0d0d; padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a;">
+                        <p style="color: #888; margin-bottom: 10px;">📊 <strong style="color: #fff;">Total de livros:</strong> <span id="configTotalLivros">0</span></p>
+                        <p style="color: #888; margin-bottom: 10px;">📊 <strong style="color: #fff;">Total de empréstimos:</strong> <span id="configTotalEmprestimos">0</span></p>
+                        <p style="color: #888; margin-bottom: 10px;">📊 <strong style="color: #fff;">Total de alunos:</strong> <span id="configTotalAlunos">0</span></p>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #bbb; margin-bottom: 15px; font-weight: 400;">Ações</h3>
+                    <button onclick="limparDados()" class="btn" style="background: #3b1717; color: #ff7777; max-width: 300px;">
+                        🗑️ Limpar todos os dados
+                    </button>
+                </div>
+
+                <div>
+                    <h3 style="color: #bbb; margin-bottom: 15px; font-weight: 400;">Sobre</h3>
+                    <div style="background: #0d0d0d; padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a;">
+                        <p style="color: #888;">📚 Sistema de Gerenciamento de Biblioteca CEEP</p>
+                        <p style="color: #555; font-size: 13px; margin-top: 8px;">Disciplulos de Evandro - v2.0</p>
+                        <p style="color: #555; font-size: 13px;">Desenvolvido para gerenciamento de livros, alunos e empréstimos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Biblioteca CEEP © 2026 — Disciplulos de Evandro</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
