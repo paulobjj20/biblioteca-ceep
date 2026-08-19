@@ -293,7 +293,185 @@ textarea::placeholder {
     letter-spacing: 0.2px;
 }
 
-.item {
+.item {/* =========================
+.status-ativo {
+    background: #1a3a1a;
+    color: #4caf50;
+}
+
+.status-devolvido {
+    background: #1a2a3a;
+    color: #64b5f6;
+}
+
+.status-atrasado {
+    background: #3a1a1a;
+    color: #ff7777;
+}
+
+.acoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.prazo {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #1e1e1e;
+    border-radius: 6px;
+    color: #ccc;
+    font-size: 13px;
+    border-left: 3px solid #444;
+}
+
+.prazo.ultimo-dia {
+    background: #2a2410;
+    color: #f4d35e;
+    border-left-color: #f4d35e;
+}
+
+.prazo.vencido {
+    background: #2a1414;
+    color: #ff7777;
+    border-left-color: #ff7777;
+}
+
+.vazio {
+    text-align: center;
+    color: #444;
+    padding: 24px;
+    border: 1px dashed #2a2a2a;
+    border-radius: 8px;/* =========================
+.status-ativo {
+    background: #1a3a1a;
+    color: #4caf50;
+}
+
+.status-devolvido {
+    background: #1a2a3a;
+    color: #64b5f6;
+}
+
+.status-atrasado {
+    background: #3a1a1a;
+    color: #ff7777;
+}
+
+.acoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.prazo {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #1e1e1e;
+    border-radius: 6px;
+    color: #ccc;
+    font-size: 13px;
+    border-left: 3px solid #444;
+}
+
+.prazo.ultimo-dia {
+    background: #2a2410;
+    color: #f4d35e;
+    border-left-color: #f4d35e;
+}
+
+.prazo.vencido {
+    background: #2a1414;
+    color: #ff7777;
+    border-left-color: #ff7777;
+}
+
+.vazio {
+    text-align: center;
+    color: #444;
+    padding: 24px;
+    border: 1px dashed #2a2a2a;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* =========================
+   LOGIN OVERLAY
+========================= */
+.login-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    transition: opacity 0.4s;
+}
+
+.login-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.login-box {
+    background: #141414;
+    border: 1px solid #2e2e2e;
+    border-radius: 20px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+.login-box h2 {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+}
+    font-size: 14px;
+}
+
+/* =========================
+   LOGIN OVERLAY
+========================= */
+.login-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    transition: opacity 0.4s;
+}
+
+.login-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.login-box {
+    background: #141414;
+    border: 1px solid #2e2e2e;
+    border-radius: 20px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+.login-box h2 {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+}
     background: #0e0e0e;
     border: 1px solid #282828;
     border-radius: 10px;
