@@ -167,19 +167,20 @@
                     <h2>👥 Cadastrar aluno</h2>
                 </div>
                 <form id="formAluno">
-                    <div class="form-group">
+                    <div class="form-group"></div>
                         <label for="nomeAlunoCadastro">Nome completo</label>
                         <input type="text" id="nomeAlunoCadastro" placeholder="Digite o nome" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="turmaAluno">Turma</label>
-                        <input type="text" id="turmaAluno" placeholder="Ex: 8º A" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="telefoneAluno">Telefone</label>
-                        <input type="text" id="telefoneAluno" placeholder="(11) 99999-9999" />
-                    </div>
-                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="telefoneAluno">Telefone</label>
+                            <input 
+                                type="text" 
+                                id="telefoneAluno" 
+                                placeholder="(11) 99999-9999"
+                                maxlength="11"
+                                inputmode="numeric"
+                                oninput="this.value = this.value.replace(/\D/g, '')"
+                            />
+                        </div class="form-group"> </div>
                         <label for="emailAluno">E-mail</label>
                         <input type="email" id="emailAluno" placeholder="aluno@email.com" required />
                     </div>
